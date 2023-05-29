@@ -8,7 +8,7 @@ __pycache__/
 
 # secrets
 secrets/
-
+.env/
 # Distribution / packaging
 .Python
 build/
