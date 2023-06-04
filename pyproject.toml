@@ -23,6 +23,7 @@ safety = "^2.3.5"
 pre-commit = "^3.3.2"
 nitpick = "^0.33.2"
 wemake-python-styleguide = "^0.18.0"
+sphinx = "^7.0.1"
 
 [build-system]
 requires = ["poetry-core"]
