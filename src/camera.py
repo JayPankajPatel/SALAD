@@ -39,7 +39,7 @@ class AbstractCamera(ABC):
 
     def show_image(self, window_name: str, image: numpy.ndarray) -> None:
         """
-        Open a window with `window_name` and show image
+        Open a window with `window_name` and show image.
 
         :param arg1: Name of opened window.
 
@@ -103,11 +103,7 @@ class AbstractCamera(ABC):
         self.save_to_file(image, destination, image_name)
 
 
-class ImageCaptureError(Exception):
-    pass
-
-
-class USBCamera(AbstractCamera):
+class USBCamera(AbstractCamera, cv2.VideoCapture):
     """
 
     USB Camera camera class.
@@ -138,5 +134,6 @@ class USBCamera(AbstractCamera):
         :rtype numpy.ndarray
         """
         camera = cv2.VideoCapture(self.__index)
+        _, image = camera.read()
         camera.release()
-        return camera.read()
+        return image

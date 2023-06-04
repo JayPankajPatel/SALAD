@@ -5,6 +5,8 @@
 
 Welcome to SALAD's documentation!
 =================================
+.. automodule:: src.camera
+    :members:
 
 .. toctree::
    :maxdepth: 2
