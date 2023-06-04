@@ -12,6 +12,10 @@ repos:
   rev: v1.3.0
   hooks:
   - id: mypy
+    exclude: |
+      (?x)^(
+          src/conf.py
+      )$
 - repo: https://github.com/nbQA-dev/nbQA
   rev: 1.7.0
   hooks:
