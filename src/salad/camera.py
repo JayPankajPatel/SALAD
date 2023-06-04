@@ -1,68 +1,142 @@
 """
+Camera Classes.
 
-Camera Functions.
-
-This class will allow you to interface with
-the Raspberry pi library and opencv
+Different camera implementations exist in our system
+However, we want to treat them the same.
+This class implements an abstract Camera class
+where Camera implementations inherit them and then
+wrap them inside a easy to use interface for the user.
 """
-from typing import Union
+
+from abc import ABC, abstractmethod
+from contextlib import contextmanager
+from typing import Generator
 
 import cv2
-import numpy as np
+import numpy
 
 
-def from_cv2_take_picture(
-    index: int,
-    cv_picture_flags: int,
-) -> Union[None, np.ndarray]:
+class AbstractCamera(ABC):
     """
-    Take a picture using cv2 and save it to a file.
 
-    :param index: index of camera connected to USB or built-in
-    :type index: int
-    :param cv_picture_flags: Flags to specify how the image should be read.
-    :type cv_picture_flags: int
-    :return: The captured image as a NumPy array, or None if capture failed.
-    :rtype: Union[None, np.ndarray]
+    Abstract Camera class.
+
+    For USB cameras and CSI cameras
     """
-    # Capture image using cv2
-    capture = cv2.VideoCapture(index)
-    ret, frame = capture.read()
-    capture.release()
 
-    if ret:
-        # if frame was captured without error
-        return frame
+    @abstractmethod
+    def take_picture(self) -> numpy.ndarray:
+        """
+        Abstract Method for taking a picture.
 
-    return None
+        raises: NotImplementedError: Must be implemented.
+
+        return: A numpy array
+
+        rtype numpy.ndarray
+        """
+        raise NotImplementedError("take_picture method must be implemented.")
+
+    def show_image(self, window_name: str, image: numpy.ndarray) -> None:
+        """
+        Open a window with `window_name` and show image
+
+        :param arg1: Name of opened window.
+
+        :type arg1: str
+
+        :param arg2: Image to show.
+
+        :type arg2: numpy.ndarray
+
+        :return None
+
+        :rtype None
+        """
+        cv2.imshow(window_name, image)
+
+    def save_to_file(
+        self,
+        image: numpy.ndarray,
+        destination: str,
+        image_name: str,
+    ) -> None:
+        """
+        Write picture to a file destination.
+
+        :param arg1: Image data as a numpy array.
+
+        :type arg1: numpy.ndarray
+
+        :param arg2: File save destination.
+
+        :type arg2: str
+
+        :param arg3: Image name with extension i.e. `*.png`, `*.jpg`
+
+        :type arg3: str
+
+        :return: None
+
+        :rtype None
+        """
+        fmt = destination + image_name
+        cv2.imwrite(fmt, image)
+
+    def take_and_save(self, destination: str, image_name: str) -> None:
+        """
+        Take a picture and write picture to a file destination.
+
+        :param arg1: File save destination.
+
+        :type arg1: str
+
+        :param arg2: Image name with extension i.e. `*.png`, `*.jpg`
+
+        :type arg2: str
+
+        :return: None
+
+        :rtype: None
+        """
+        image = self.take_picture()
+        self.save_to_file(image, destination, image_name)
 
 
-# def from_pi_cam_take_picture() -> Union[None, np.ndarray]:
-# TODO Implement picture taking from pi
-#    return
+class ImageCaptureError(Exception):
+    pass
 
 
-def write_picture_file(
-    dir_name: str,
-    file_name: str,
-    picture_in: np.ndarray,
-) -> None:
+class USBCamera(AbstractCamera):
     """
-    Write a picture to a directory.
 
-    :param dir_name: This is where you save your picture in.
-    :type dir_name: str
-    :param file_name: Save with name and file extenstion ex. *.png
-    :type file_name: str
-    :param picture_in: Picture that was taken.
-    :type picture_in: np.ndarray
-    :return None
-    :rtype None
+    USB Camera camera class.
+
+    Allows interfacing with cameras on the USB bus.
     """
-    fmt = dir_name + file_name
-    cv2.imwrite(fmt, picture_in)
 
+    def __init__(self, index: int) -> None:
+        """
+        Get the USB camera's index from the user.
 
-if __name__ == "__main__":
-    image = from_cv2_take_picture(0, 1)
-    write_picture_file("../pictures", "ran_from_camera_py.png", image)
+        :param arg1: Camera index.
+
+        :type arg1: int
+
+        :return None
+
+        :rtype None
+        """
+        self.__index = index
+
+    def take_picture(self) -> numpy.ndarray:
+        """
+        Define take_picture to USB camera implementation.
+
+        :return A numpy array
+
+        :rtype numpy.ndarray
+        """
+        camera = cv2.VideoCapture(self.__index)
+        camera.release()
+        return camera.read()
