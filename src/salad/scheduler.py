@@ -7,7 +7,6 @@ import time
 from datetime import datetime
 
 import schedule
-
 from camera import USBCamera
 
 
