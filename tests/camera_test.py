@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pytest
 
-from camera import USBCamera
+from salad.camera import USBCamera
 
 
 @pytest.fixture

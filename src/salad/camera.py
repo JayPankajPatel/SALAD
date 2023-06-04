@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from typing import Generator
 
 import cv2
-import numpy
+import numpy as np
 
 
 class AbstractCamera(ABC):
@@ -25,7 +25,7 @@ class AbstractCamera(ABC):
     """
 
     @abstractmethod
-    def take_picture(self) -> numpy.ndarray:
+    def take_picture(self) -> np.ndarray:
         """
         Abstract Method for taking a picture.
 
@@ -33,13 +33,15 @@ class AbstractCamera(ABC):
 
         return: A numpy array
 
-        rtype numpy.ndarray
+        rtype np.ndarray
         """
         raise NotImplementedError("take_picture method must be implemented.")
 
-    def show_image(self, window_name: str, image: numpy.ndarray) -> None:
+    def show_image(self, window_name: str, image: np.ndarray) -> None:
         """
         Open a window with `window_name` and show image.
+
+        Destroy window by pressing any key.
 
         :param arg1: Name of opened window.
 
@@ -47,17 +49,19 @@ class AbstractCamera(ABC):
 
         :param arg2: Image to show.
 
-        :type arg2: numpy.ndarray
+        :type arg2: np.ndarray
 
         :return None
 
         :rtype None
         """
         cv2.imshow(window_name, image)
+        cv2.waitKey(1)  # This means any key press.
+        cv2.destoryAllWindows()
 
     def save_to_file(
         self,
-        image: numpy.ndarray,
+        image: np.ndarray,
         destination: str,
         image_name: str,
     ) -> None:
@@ -66,7 +70,7 @@ class AbstractCamera(ABC):
 
         :param arg1: Image data as a numpy array.
 
-        :type arg1: numpy.ndarray
+        :type arg1: np.ndarray
 
         :param arg2: File save destination.
 
@@ -80,8 +84,7 @@ class AbstractCamera(ABC):
 
         :rtype None
         """
-        fmt = destination + image_name
-        cv2.imwrite(fmt, image)
+        cv2.imwrite(f"{destination}/{image_name}", image)
 
     def take_and_save(self, destination: str, image_name: str) -> None:
         """
@@ -122,18 +125,22 @@ class USBCamera(AbstractCamera, cv2.VideoCapture):
         :return None
 
         :rtype None
+
+        :raises RuntimeError: If an error occurs while capturing the image.
         """
         self.__index = index
 
-    def take_picture(self) -> numpy.ndarray:
+    def take_picture(self) -> np.ndarray:
         """
         Define take_picture to USB camera implementation.
 
         :return A numpy array
 
-        :rtype numpy.ndarray
+        :rtype np.ndarray
         """
         camera = cv2.VideoCapture(self.__index)
-        _, image = camera.read()
-        camera.release()
+        ret, image = camera.read()
+        if not ret:
+            raise RuntimeError("Failed to capture image.")
+
         return image

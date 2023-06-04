@@ -8,6 +8,9 @@ from datetime import datetime
 
 import schedule
 from camera import USBCamera
+from file_io import create_directory_in_script_location
+
+PICTURE_DIR_NAME = "pictures"
 
 
 def timelaspe() -> None:
@@ -18,9 +21,12 @@ def timelaspe() -> None:
     :rtype None
     """
     camera_obj = USBCamera(0)
-    file_name = f"{datetime.now}.jpg"
-    print(f"Taking picture called: {file_name}")
-    camera_obj.take_and_save("../pictures", file_name)
+
+    create_directory_in_script_location(PICTURE_DIR_NAME)
+    current_datetime = datetime.now().strftime("%d/%m/%y-%H:%M:%S")
+    image_file_name = f"{current_datetime}.jpg"
+    print(f"Taking picture called: {image_file_name}")
+    camera_obj.take_and_save("../pictures", image_file_name)
 
 
 if __name__ == "__main__":
