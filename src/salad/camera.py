@@ -9,8 +9,6 @@ wrap them inside a easy to use interface for the user.
 """
 
 from abc import ABC, abstractmethod
-from contextlib import contextmanager
-from typing import Generator
 
 import cv2
 import numpy as np
@@ -106,7 +104,7 @@ class AbstractCamera(ABC):
         self.save_to_file(image, destination, image_name)
 
 
-class USBCamera(AbstractCamera, cv2.VideoCapture):
+class USBCamera(AbstractCamera):
     """
 
     USB Camera camera class.
@@ -128,7 +126,7 @@ class USBCamera(AbstractCamera, cv2.VideoCapture):
 
         :raises RuntimeError: If an error occurs while capturing the image.
         """
-        self.__index = index
+        self._index = index
 
     def take_picture(self) -> np.ndarray:
         """
@@ -138,7 +136,7 @@ class USBCamera(AbstractCamera, cv2.VideoCapture):
 
         :rtype np.ndarray
         """
-        camera = cv2.VideoCapture(self.__index)
+        camera = cv2.VideoCapture(self._index)
         ret, image = camera.read()
         if not ret:
             raise RuntimeError("Failed to capture image.")
