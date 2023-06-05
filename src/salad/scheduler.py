@@ -23,7 +23,7 @@ def timelaspe() -> None:
     camera_obj = USBCamera(0)
 
     create_directory_in_script_location(PICTURE_DIR_NAME)
-    current_datetime = datetime.now().strftime("%d/%m/%y-%H:%M:%S")
+    current_datetime = datetime.now().strftime("%d-%m-%y-%H:%M:%S")
     image_file_name = f"{current_datetime}.jpg"
     print(f"Taking picture called: {image_file_name}")
     camera_obj.take_and_save("../pictures", image_file_name)
