@@ -6,9 +6,10 @@ authors = ["JayPankajPatel <jayp102501@gmail.com>"]
 license = "GNU General Public License v3.0"
 readme = "README.md"
 
+
 [[tool.poetry.source]]
-name = "salad"
-url = "path = 'src'"
+name = "PyPI"
+priority = "primary"
 
 [tool.nitpick]
 style = "https://raw.githubusercontent.com/wemake-services/wemake-python-styleguide/master/styles/nitpick-style-wemake.toml"
