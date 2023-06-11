@@ -29,9 +29,21 @@ def timelaspe() -> None:
     camera_obj.take_and_save("../pictures", image_file_name)
 
 
+ON_INTERVAL = 5
+OFF_INTERVAL = 10
+
+
+def job1() -> None:
+    print("job1")
+
+    def job2() -> None:
+        print("job1")
+        schedule.every(ON_INTERVAL).seconds.do(job2)
+
+
 if __name__ == "__main__":
     PICTURE_INTERVAL = 20
-    schedule.every(PICTURE_INTERVAL).seconds.do(timelaspe)
+    schedule.every(OFF_INTERVAL).seconds.do(job1)
 
     while True:
         schedule.run_pending()
