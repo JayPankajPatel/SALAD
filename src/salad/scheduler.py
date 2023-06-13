@@ -6,45 +6,44 @@ TODO Create a configuration file for this module.
 import time
 from datetime import datetime
 
-import schedule
-from camera import USBCamera
-from file_io import create_directory_in_script_location
+from rocketry import Rocketry
+from rocketry.conds import every
 
-PICTURE_DIR_NAME = "pictures"
-
-
-def timelaspe() -> None:
-    """
-    Take pictures with intent of making a timelaspe.
-
-    :return None
-    :rtype None
-    """
-    camera_obj = USBCamera(0)
-
-    create_directory_in_script_location(PICTURE_DIR_NAME)
-    current_datetime = datetime.now().strftime("%d-%m-%y-%H:%M:%S")
-    image_file_name = f"{current_datetime}.jpg"
-    print(f"Taking picture called: {image_file_name}")
-    camera_obj.take_and_save("../pictures", image_file_name)
+# PICTURE_DIR_NAME = "pictures"
 
 
-ON_INTERVAL = 5
-OFF_INTERVAL = 10
+# def timelaspe() -> None:
+#     """
+#     Take pictures with intent of making a timelaspe.
+#
+#     :return None
+#     :rtype None
+#     """
+#     camera_obj = USBCamera(0)
+#
+#     create_directory_in_script_location(PICTURE_DIR_NAME)
+#     current_datetime = datetime.now().strftime("%d-%m-%y-%H:%M:%S")
+#     image_file_name = f"{current_datetime}.jpg"
+#     print(f"Taking picture called: {image_file_name}")
+#     camera_obj.take_and_save("../pictures", image_file_name)
+#
+app = Rocketry()
 
 
-def job1() -> None:
-    print("job1")
+@app.task(every("1 seconds"), execution="thread")
+def toggle_job1() -> None:
+    print("Hello from job 1", datetime.now())
+    time.sleep(4)
+    print("Toggle from job 1", datetime.now())
+    time.sleep(6)
 
-    def job2() -> None:
-        print("job1")
-        schedule.every(ON_INTERVAL).seconds.do(job2)
+
+@app.task(every("3 seconds"), execution="thread")
+def job2() -> None:
+    print("Hello from job 2", datetime.now())
+    time.sleep(5)
 
 
 if __name__ == "__main__":
-    PICTURE_INTERVAL = 20
-    schedule.every(OFF_INTERVAL).seconds.do(job1)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    print("Test")
+    app.run()
