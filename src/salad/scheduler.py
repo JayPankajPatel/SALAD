@@ -6,9 +6,11 @@ TODO Create a configuration file for this module.
 import time
 from datetime import datetime
 
-from relay import BoardStack, Relay
 from rocketry import Rocketry
 from rocketry.conds import every
+
+from .camera import USBCamera
+from .relay import BoardStack, Relay
 
 relays = {
     "light": Relay(0, 1),
@@ -18,6 +20,7 @@ relays = {
 }
 
 stack_one = BoardStack(0, relays)
+webcam = USBCamera(0)
 
 # PICTURE_DIR_NAME = "pictures"
 
@@ -66,9 +69,11 @@ def toggle_atomizer_sys() -> None:
 
 
 @app.task("time of day between 06:00 and 21:59", execution="thread")
-def light_on() -> None:
+def light_on_take_picture() -> None:
     print("Light ON", datetime.now())
     stack_one.relays["light"].set_state(1)
+    image_name = f"{datetime.now()}.jpg"
+    webcam.take_and_save("../pictures/", image_name)
 
 
 @app.task("time of day between 22:00 and 05:59", execution="thread")
