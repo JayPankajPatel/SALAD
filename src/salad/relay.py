@@ -22,8 +22,8 @@ class Relay:
         """
         Constructor for assigning relays and which board they belong to.
 
-        :param stack_number: Board number reference (0-7)
-        :param relay_number: Relay number reference (1-8)
+        :param stack_number: Board number reference range is (0-7)
+        :param relay_number: Relay number reference range is (1-8)
         :raises ValueError: If values are out of valid range
         """
         if 0 <= stack_number <= 7:
@@ -80,11 +80,11 @@ class BoardStack:
     Click here to go to the product site: https://sequentmicrosystems.com/collections/industrial-automation/products/8-relays-stackable-card-for-raspberry-pi
     """
 
-    def __init__(self, stack_number: int, relays: list[Relay]) -> None:
+    def __init__(self, stack_number: int, relays: dict[str, Relay]) -> None:
         """
         Constructor for assigning stack number and relays to the board.
 
-        :param stack_number: Board number reference (0-7)
+        :param stack_number: Board number reference range is (0-7)
         :param relays: Dictionary mapping relay names to their numbers
         :raises ValueError: If stack number is out of valid range
         """
