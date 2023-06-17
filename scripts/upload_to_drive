@@ -1,0 +1,6 @@
+#!/bin/bash
+# We are running backups with cron
+# this script is ran in `crontab -e`
+rclone copy /home/jay/Repos/SALAD/src/pictures/ salad:/images
+rm -rf /home/jay/Repos/SALAD/src/pictures/*
+

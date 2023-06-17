@@ -9,18 +9,18 @@ from datetime import datetime
 from rocketry import Rocketry
 from rocketry.conds import every
 
-from .camera import USBCamera
-from .relay import BoardStack, Relay
+from salad import camera
+from salad import relay
 
 relays = {
-    "light": Relay(0, 1),
-    "atomizer": Relay(0, 2),
-    "atomizer-fans": Relay(0, 3),
-    "tec-fans": Relay(0, 4),
+    "light": relay.Relay(0, 1),
+    "atomizer": relay.Relay(0, 2),
+    "atomizer-fans": relay.Relay(0, 3),
+    "tec-fans": relay.Relay(0, 4),
 }
 
-stack_one = BoardStack(0, relays)
-webcam = USBCamera(0)
+stack_one = relay.BoardStack(0, relays)
+webcam = camera.USBCamera(0)
 
 # PICTURE_DIR_NAME = "pictures"
 
@@ -43,13 +43,13 @@ webcam = USBCamera(0)
 app = Rocketry()
 
 relays = {
-    "light": Relay(0, 1),
-    "atomizer": Relay(0, 2),
-    "atomizer-fans": Relay(0, 3),
-    "tec-fans": Relay(0, 4),
+    "light": relay.Relay(0, 1),
+    "atomizer": relay.Relay(0, 2),
+    "atomizer-fans": relay.Relay(0, 3),
+    "tec-fans": relay.Relay(0, 4),
 }
 
-stack_one = BoardStack(0, relays)
+stack_one = relay.BoardStack(0, relays)
 
 
 # The seconds in this case alone is how often the system is going
@@ -74,9 +74,10 @@ def light_on_take_picture() -> None:
     stack_one.relays["light"].set_state(1)
     image_name = f"{datetime.now()}.jpg"
     webcam.take_and_save("../pictures/", image_name)
+    time.sleep(3)
 
 
-@app.task("time of day between 22:00 and 05:59", execution="thread")
+@app.task("time of day between 22:00 and 5:59", execution="thread")
 def light_off() -> None:
     print("Light OFF", datetime.now())
     stack_one.relays["light"].set_state(0)
@@ -84,4 +85,5 @@ def light_off() -> None:
 
 if __name__ == "__main__":
     print("Test")
+    stack_one.relays["light"].set_state(1)
     app.run()
