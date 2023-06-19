@@ -33,6 +33,7 @@ wemake-python-styleguide = "^0.18.0"
 pytest-mock = "^3.10.0"
 sphinx = "6.2.1"
 sphinx-rtd-theme = "^1.2.2"
+sphinx-copybutton = "^0.5.2"
 
 [build-system]
 requires = ["poetry-core"]

@@ -94,6 +94,36 @@ For the environment variables changes to take effect, restart your shell with th
 
   exec "$SHELL"
 
+For convenience here are the commands together so you can just copy and paste them.
+
+Bash::
+
+  curl https://pyenv.run | bash
+  echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+  echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+  echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+  echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
+  echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
+  echo 'eval "$(pyenv init -)"' >> ~/.profile
+  echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
+  echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+  echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+  exec "$SHELL"
+
+Zsh::
+
+  echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+  echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+  echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+  exec "$SHELL"
+
+Fish::
+
+  set -Ux PYENV_ROOT $HOME/.pyenv
+  fish_add_path $PYENV_ROOT/bin
+  pyenv init - | source
+  exec "$SHELL"
+
 Usage
 ~~~~~
 Install ``python3.10.10`` with pyenv as this is the version we are using::
@@ -107,7 +137,8 @@ if you navigate to the repository::
 
 And then type::
 
-  pyenv local
+  #pyenv local .python-version, however in this version of the software it is 3.10.10 but it could change
+  pyenv local 3.10.10
 
 When python is used in this directory, it will be whatever the ``.python-version`` is set to.
 

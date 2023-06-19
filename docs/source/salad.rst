@@ -1,10 +1,10 @@
-salad package
-=============
+SALAD
+=====
 
-Submodules
+Modules
 ----------
 
-salad.camera module
+camera module
 -------------------
 
 .. automodule:: salad.camera
@@ -12,7 +12,7 @@ salad.camera module
    :undoc-members:
    :show-inheritance:
 
-salad.file\_io module
+file\_io module
 ---------------------
 
 .. automodule:: salad.file_io
@@ -20,7 +20,7 @@ salad.file\_io module
    :undoc-members:
    :show-inheritance:
 
-salad.relay module
+relay module
 ------------------
 
 .. automodule:: salad.relay
@@ -28,7 +28,7 @@ salad.relay module
    :undoc-members:
    :show-inheritance:
 
-salad.scheduler module
+scheduler module
 ----------------------
 
 .. automodule:: salad.scheduler
