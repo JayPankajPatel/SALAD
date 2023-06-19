@@ -9,9 +9,9 @@ Welcome to SALAD's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-  salad
-  modules
+  /source/intro
+  /source/contributors_guide
+  /source/salad
 
 
 Indices and tables
