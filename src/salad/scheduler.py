@@ -14,7 +14,7 @@ from salad import camera, relay
 
 relays = {
     "light": relay.Relay(0, 1),
-    "atomizer": relay.Relay(0, 5),
+    "atomizer": relay.Relay(0, 6),
     "atomizer-fans": relay.Relay(0, 3),
     "tec-fans": relay.Relay(0, 4),
 }
