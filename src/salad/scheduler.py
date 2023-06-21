@@ -10,8 +10,7 @@ from datetime import datetime
 from rocketry import Rocketry
 from rocketry.conds import every
 
-from salad import camera
-from salad import relay
+from salad import camera, relay
 
 relays = {
     "light": relay.Relay(0, 1),
@@ -21,16 +20,11 @@ relays = {
 }
 
 stack_one = relay.BoardStack(0, relays)
+stack_one.set_all_on()
+
 webcam = camera.USBCamera(0)
 
 app = Rocketry()
-
-relays = {
-    "light": relay.Relay(0, 1),
-    "atomizer": relay.Relay(0, 2),
-    "atomizer-fans": relay.Relay(0, 3),
-    "tec-fans": relay.Relay(0, 4),
-}
 
 stack_one = relay.BoardStack(0, relays)
 

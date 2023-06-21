@@ -8,6 +8,10 @@ Pyenv Installation
 
 .. _here: https://github.com/pyenv/pyenv#installation
 
+First we have to install the following packages before we get started::
+
+  sudo apt-get install build-essential zlib1g-dev libffi-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev liblzma-dev
+
 ``pyenv`` is for python version management as ``poetry`` does not have any way of doing so. Open a terminal and paste the following
 
 For ``Linux`` and ``WSL``::
@@ -126,19 +130,19 @@ Fish::
 
 Usage
 ~~~~~
-Install ``python3.10.10`` with pyenv as this is the version we are using::
-
-  pyenv install 3.10.10
-
 In SALAD repository, there is a .python-version file that will automatically set your python version
 if you navigate to the repository::
 
   cd </path/to/SALAD>
 
+Install ``python``, the root of the directory will have a ``.python-version`` file and that will
+be the python version that is installed ::
+
+  pyenv install
+
 And then type::
 
-  #pyenv local .python-version, however in this version of the software it is 3.10.10 but it could change
-  pyenv local 3.10.10
+  pyenv local
 
 When python is used in this directory, it will be whatever the ``.python-version`` is set to.
 
