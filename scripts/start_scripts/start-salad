@@ -1,0 +1,4 @@
+#! /bin/bash
+
+source ~/Repos/SALAD/.venv/salad/bin/activate
+sudo ~/Repos/SALAD/.venv/salad/bin/python3.10 ~/Repos/SALAD/src/salad/scheduler.py
