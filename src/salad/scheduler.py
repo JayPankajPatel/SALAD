@@ -3,48 +3,64 @@ Schedule jobs at specified times or intervals.
 
 TODO Create a configuration file for this module.
 """
+
 import time
 from datetime import datetime
 
-import schedule
-from camera import USBCamera
-from file_io import create_directory_in_script_location
+from rocketry import Rocketry
+from rocketry.conds import every
 
-PICTURE_DIR_NAME = "pictures"
+from salad import camera, relay
 
+relays = {
+    "light": relay.Relay(0, 1),
+    "atomizer": relay.Relay(0, 6),
+    "atomizer-fans": relay.Relay(0, 3),
+    "tec-fans": relay.Relay(0, 4),
+}
 
-def timelaspe() -> None:
-    """
-    Take pictures with intent of making a timelaspe.
+stack_one = relay.BoardStack(0, relays)
+stack_one.set_all_on()
 
-    :return None
-    :rtype None
-    """
-    camera_obj = USBCamera(0)
+webcam = camera.USBCamera(0)
 
-    create_directory_in_script_location(PICTURE_DIR_NAME)
-    current_datetime = datetime.now().strftime("%d-%m-%y-%H:%M:%S")
-    image_file_name = f"{current_datetime}.jpg"
-    print(f"Taking picture called: {image_file_name}")
-    camera_obj.take_and_save("../pictures", image_file_name)
+app = Rocketry()
 
-
-ON_INTERVAL = 5
-OFF_INTERVAL = 10
+stack_one = relay.BoardStack(0, relays)
 
 
-def job1() -> None:
-    print("job1")
+# The seconds in this case alone is how often the system is going
+# to try to poll this task to turn it on or off
+@app.task(every("1 seconds"), execution="thread")
+def toggle_atomizer_sys() -> None:
+    stack_one.relays["atomizer"].set_state(1)
+    stack_one.relays["atomizer-fans"].set_state(1)
+    print("atomizer ON", datetime.now())
 
-    def job2() -> None:
-        print("job1")
-        schedule.every(ON_INTERVAL).seconds.do(job2)
+    # TODO not hard code these values
+    time.sleep(30)
+    stack_one.relays["atomizer"].set_state(0)
+    stack_one.relays["atomizer-fans"].set_state(0)
+    print("atomizer OFF", datetime.now())
+    time.sleep(180)
+
+
+@app.task("time of day between 06:00 and 21:59", execution="thread")
+def light_on_take_picture() -> None:
+    print("Light ON", datetime.now())
+    stack_one.relays["light"].set_state(1)
+    image_name = f"{datetime.now()}.jpg"
+    webcam.take_and_save("../pictures/", image_name)
+    time.sleep(3)
+
+
+@app.task("time of day between 22:00 and 5:59", execution="thread")
+def light_off() -> None:
+    print("Light OFF", datetime.now())
+    stack_one.relays["light"].set_state(0)
 
 
 if __name__ == "__main__":
-    PICTURE_INTERVAL = 20
-    schedule.every(OFF_INTERVAL).seconds.do(job1)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    print("Test")
+    stack_one.relays["light"].set_state(1)
+    app.run()

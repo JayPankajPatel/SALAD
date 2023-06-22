@@ -7,7 +7,7 @@ This class implements an abstract Camera class
 where Camera implementations inherit them and then
 wrap them inside a easy to use interface for the user.
 """
-
+import time
 from abc import ABC, abstractmethod
 
 import cv2
@@ -137,8 +137,14 @@ class USBCamera(AbstractCamera):
         :rtype np.ndarray
         """
         camera = cv2.VideoCapture(self._index)
+        time.sleep(1)
         ret, image = camera.read()
         if not ret:
             raise RuntimeError("Failed to capture image.")
 
         return image
+
+
+if __name__ == "__main__":
+    webcam = USBCamera(0)
+    webcam.take_and_save("../pictures/", "test.jpg")
